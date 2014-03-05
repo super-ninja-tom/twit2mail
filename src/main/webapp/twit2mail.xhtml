@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core">
+    <h:head profile="http://www.w3.org/2005/10/profile">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+        <title>twit2mail</title>
+        <link rel="icon" type="image/png" href="https://mail.google.com/mail/images/favicon.ico" />
+    </h:head>
+    <body>
+        <h1>twit2mail</h1>
+        <a href="edit.jsf">Add/edit/remove circle/feed</a>
+        <a href="settings.jsf">Settings</a>
+        <a href="help.jsf">Help</a>
+        <div id="container">
+        	<h2>Circle refresh</h2>
+            <h:dataTable id="circlesList" value="#{twit2mail.circles}" rendered="true" var="circle">
+                <h:column>
+                    <h:outputLink value="/post/#{circle.circleName}">#{circle.circleName}</h:outputLink>
+                </h:column>
+            </h:dataTable>
+            <h2>Statistics</h2>
+            <h:form id="statsForm">
+                <h:panelGrid columns="2">                
+        			<h:outputLabel>Running Since:</h:outputLabel>
+        			<h:outputLabel value="#{twit2mail.runningSince}"></h:outputLabel>
+                    <h:outputLabel>Twitter Refreshed:</h:outputLabel>
+                    <h:outputLabel value="#{twit2mail.tweetRefreshCount}"></h:outputLabel>
+                    <h:outputLabel>API access count:</h:outputLabel>
+                    <h:outputLabel value="#{twit2mail.apiAccessCount}"></h:outputLabel>
+                    <h:outputLabel>RSS Refreshed:</h:outputLabel>
+                    <h:outputLabel value="#{twit2mail.feedRefreshCount}"></h:outputLabel>
+                    <h:outputLabel>Emails sent:</h:outputLabel>
+                    <h:outputLabel value="#{twit2mail.emailCount}"></h:outputLabel>
+                </h:panelGrid>
+            </h:form>
+        </div>
+    </body>
+</html>

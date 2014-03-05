@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core">
+    <h:head profile="http://www.w3.org/2005/10/profile">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+        <title>twit2mail</title>
+        <link rel="icon" type="image/png" href="https://mail.google.com/mail/images/favicon.ico" />
+    </h:head>
+    <body>
+        <h1>twit2mail</h1>
+        <a href="settings.jsf">Settings</a>
+        <a href="help.jsf">Help</a>
+        <div id="container">
+        	<h2>Circle Manager</h2>
+            <h:dataTable id="circlesList" value="#{twit2mail.circles}" rendered="true" var="circle">
+                <h:column>
+                    <h:outputLink value="/post/#{circle.circleName}">#{circle.circleName}</h:outputLink>
+                </h:column>
+                <h:column>
+                    <h:form id="removeCircleForm">
+                        <input type="hidden" name="hidden1" value="" />
+                        <h:commandButton id="removeCircle" value="Remove" action="#{twit2mail.removeNamedCircle}">
+                            <f:param name="circle" value="#{circle.circleName}"></f:param>
+                        </h:commandButton>
+                    </h:form>
+                </h:column>
+                <h:column>
+                    <h:outputText value="#{circle.schedule}"></h:outputText>
+                </h:column>
+                <h:column>
+                    <h:outputText value="#{circle.circleList}"></h:outputText>
+                </h:column>
+            </h:dataTable>
+            <h:form id="circlesForm">
+                <h:panelGrid columns="6">
+                	<h:outputLabel value="Name"></h:outputLabel>
+                    <h:outputLabel value="Schedule"></h:outputLabel>
+                    <h:outputLabel value="Feeds"></h:outputLabel>
+                    <h:outputLabel value=""></h:outputLabel>
+                    <h:outputLabel value=""></h:outputLabel>
+                    <h:outputLabel value=""></h:outputLabel>
+                    <h:inputText value="#{circleName}"></h:inputText>
+                	<h:inputText value="#{circleSchedule}"></h:inputText>
+                	<h:inputText value="#{circleList}"></h:inputText>
+                	<h:commandButton id="createCircle" value="Create/Update Circle" action="#{twit2mail.updateCircle(circleName, circleList, circleSchedule)}"></h:commandButton>
+                    <h:commandButton id="addToCircle" value="Add to Circle" action="#{twit2mail.addToCircle(circleName, circleList)}"></h:commandButton>
+                	<h:commandButton id="removeFromCircle" value="Remove from Circle" action="#{twit2mail.removeFromCircle(circleName, circleList)}"></h:commandButton>
+                </h:panelGrid>
+            </h:form>
+            <h2>Feed Manager</h2>
+            <h:dataTable id="feedsList" value="#{twit2mail.feeds}" rendered="true" var="feed">
+                <h:column>
+                    <f:facet name="header">Name</f:facet>
+                    <h:outputText value="#{feed.feedName}"></h:outputText>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Last read</f:facet>
+                    <h:outputText value="#{feed.lastFeedRead}">
+                        <f:convertDateTime type="date" pattern="yyyy-MM-dd HH:mm:ss z"/>
+                    </h:outputText>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Include content</f:facet>
+                	<h:form id="refreshFeedForm">
+                        <input type="hidden" name="hidden1" value="" />
+                        <h:selectBooleanCheckbox value="#{feed.includeContent}"
+							onclick="this.form.submit();"
+							immediate="true"
+							valueChangeListener="#{twit2mail.includeContentToggled}"/>
+                    </h:form>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Include in default circle</f:facet>
+                    <h:form id="includeInCircle1">
+                        <input type="hidden" name="hidden1" value="" />
+                        <h:selectBooleanCheckbox value="#{feed.includeInCircle}"
+                                                 onclick="this.form.submit();"
+                                                 immediate="true"
+                                                 valueChangeListener="#{twit2mail.includeContentToggled}"/>
+                    </h:form>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Refresh</f:facet>
+                    <h:form id="refreshFeedForm2">
+                        <input type="hidden" name="hidden1" value="" />
+                        <h:commandButton id="refreshCircle" value="Refresh" action="#{twit2mail.refreshNamedFeed}">
+                            <f:param name="param" value="#{feed.feedName}"></f:param>
+                        </h:commandButton>
+                    </h:form>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Remove</f:facet>
+                    <h:form id="removeFeedForm">
+                        <input type="hidden" name="hidden1" value="" />
+                        <h:commandButton id="removeFeed" value="Remove" action="#{twit2mail.removeFeed}">
+                            <f:param name="feed" value="#{feed.feedName}"></f:param>
+                        </h:commandButton>
+                    </h:form>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">URL</f:facet>
+                    <h:outputText value="#{feed.feedUrl}"></h:outputText>
+                </h:column>
+            </h:dataTable>
+            <h:form id="addFeedForm">
+                <h:panelGrid columns="3">
+                    <h:outputLabel value="Name"></h:outputLabel>
+                    <h:outputLabel value="URL"></h:outputLabel>
+                    <h:outputLabel value=""></h:outputLabel>
+                    <h:inputText value="#{feedName}"></h:inputText>
+                    <h:inputText value="#{feedUrl}"></h:inputText>
+                    <h:commandButton id="addFeed" value="Add Feed" action="#{twit2mail.addFeed(feedName, feedUrl)}"></h:commandButton>
+                </h:panelGrid>
+            </h:form>
+            <h2>YouTube Subscriptions</h2> 
+            <h:form id="refreshYoutubeForm">
+                        <input type="hidden" name="hidden1" value="" />
+                        <h:commandButton id="refreshYoutube" value="Refresh" action="#{twit2mail.refreshYoutube}"/>
+            </h:form>
+            <h:dataTable id="feedsList2" value="#{twit2mail.tubers}" rendered="true" var="feed">
+                <h:column>
+                    <f:facet name="header">Name</f:facet>
+                    <h:outputText value="#{feed.feedName}"></h:outputText>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Last read</f:facet>
+                    <h:outputText value="#{feed.lastFeedRead}">
+                        <f:convertDateTime type="date" pattern="yyyy-MM-dd HH:mm:ss z"/>
+                    </h:outputText>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Include content</f:facet>
+                	<h:form id="refreshFeedForm">
+                        <input type="hidden" name="hidden1" value="" />
+                        <h:selectBooleanCheckbox value="#{feed.includeContent}"
+							onclick="this.form.submit();"
+							immediate="true"
+							valueChangeListener="#{twit2mail.includeContentToggled}"/>
+                    </h:form>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Include in default circle</f:facet>
+                    <h:form id="includeInYoutubeCircle">
+                        <input type="hidden" name="hidden1" value="" />
+                        <h:selectBooleanCheckbox value="#{feed.includeInCircle}"
+                                                 onclick="this.form.submit();"
+                                                 immediate="true"
+                                                 valueChangeListener="#{twit2mail.includeContentToggled}"/>
+                    </h:form>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Refresh</f:facet>
+                    <h:form id="refreshFeedForm3">
+                        <input type="hidden" name="hidden1" value="" />
+                        <h:commandButton id="refreshCircle" value="Refresh" action="#{twit2mail.refreshNamedFeed}">
+                            <f:param name="param" value="#{feed.feedName}"></f:param>
+                        </h:commandButton>
+                    </h:form>
+                </h:column>
+            </h:dataTable>
+            <h2>Twitter Following</h2> 
+            <h:form id="refreshTwitterForm">
+                        <input type="hidden" name="hidden1" value="" />
+                        <h:commandButton id="refreshTwitter" value="Refresh" action="#{twit2mail.refreshFollowing}"/>
+            </h:form>
+            <h:dataTable id="followingList" value="#{twit2mail.following}" rendered="true" var="following">
+                <h:column>
+                    <f:facet name="header">Name</f:facet>
+                    <h:outputText value="#{following.feedName}"></h:outputText>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Include in default circle</f:facet>
+                    <h:form id="includeInTwitterCircle">
+                        <input type="hidden" name="hidden1" value="" />
+                        <h:selectBooleanCheckbox value="#{following.includeInCircle}"
+                                                 onclick="this.form.submit();"
+                                                 immediate="true"
+                                                 valueChangeListener="#{twit2mail.includeContentToggled}"/>
+                    </h:form>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Refresh</f:facet>
+                    <h:form id="refreshFeedForm3">
+                        <input type="hidden" name="hidden1" value="" />
+                        <h:commandButton id="refreshCircle" value="Refresh" action="#{twit2mail.refreshNamedTweeter}">
+                            <f:param name="param" value="#{following.feedName}"></f:param>
+                        </h:commandButton>
+                    </h:form>
+                </h:column>
+            </h:dataTable>
+            <h2>Statistics</h2>
+            <h:form id="statsForm">
+                <h:panelGrid columns="2">                
+        			<h:outputLabel>Running Since:</h:outputLabel>
+        			<h:outputLabel value="#{twit2mail.runningSince}"></h:outputLabel>
+                    <h:outputLabel>Twitter Refreshed:</h:outputLabel>
+                    <h:outputLabel value="#{twit2mail.tweetRefreshCount}"></h:outputLabel>
+                    <h:outputLabel>API access count:</h:outputLabel>
+                    <h:outputLabel value="#{twit2mail.apiAccessCount}"></h:outputLabel>
+                    <h:outputLabel>RSS Refreshed:</h:outputLabel>
+                    <h:outputLabel value="#{twit2mail.feedRefreshCount}"></h:outputLabel>
+                    <h:outputLabel>Emails sent:</h:outputLabel>
+                    <h:outputLabel value="#{twit2mail.emailCount}"></h:outputLabel>
+                </h:panelGrid>
+            </h:form>
+        </div>
+    </body>
+</html>

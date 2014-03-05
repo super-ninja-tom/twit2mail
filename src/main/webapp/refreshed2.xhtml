@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core">
+  <script type="text/javascript">
+  document.addEventListener('keyup', function(e){
+    if(e.keyCode == 221) {
+      document.forms[1].submit();
+      window.location = "/post/#{sessionScope.toRefresh}"
+    }
+  })
+  </script>
+	<h:head profile="http://www.w3.org/2005/10/profile">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>twit2mail</title>
+		<link rel="icon" type="image/png"
+			href="https://mail.google.com/mail/images/favicon.ico" />
+
+	</h:head>
+	<body>
+		<h1>Latest update from <h:outputText value="#{sessionScope.toRefresh}"/></h1>
+		<h:outputText value="#{twit2mail.refreshed2}" escape="false"/>
+		<h:form id="save">
+			<h:commandButton value="&#9993;" action="#{twit2mail.save}"/>
+		</h:form>
+		<h:form id="reload">
+			<h:commandButton value="&#9852;" action="#{twit2mail.reload}"/>
+		</h:form>
+		<p>You might also like to check your <a href="https://www.youtube.com/playlist?list=WL">watch later</a></p>
+		<p><a href="/">Go home</a></p>
+	</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core">
+
+	<h:head profile="http://www.w3.org/2005/10/profile">
+	<title>twit2mail: unsubscribe</title>
+    #{twit2mail.unsubscribe()}
+	</h:head>
+	<body>
+		<script language="javascript">
+		setTimeout("self.close()",10)
+		</script>
+        <h1>twit2mail</h1>
+        <p>Unsubscribed from: <h:outputLink value="#{param['param']}"><h:outputText value="#{param['param']}"/></h:outputLink></p>
+		<h:link value="Main page" outcome="twit2mail" />
+	</body>
+</html>
